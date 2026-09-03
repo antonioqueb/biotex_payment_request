@@ -7,19 +7,16 @@
         <field name="domain">[('state', '=', 'paid')]</field>
     </record>
 
-    <menuitem id="menu_payments_root" name="Pagos" sequence="14" web_icon="biotex_payment_request,static/description/icon.png"
-              groups="biotex_base.group_biotex_payments,biotex_base.group_biotex_accounting,biotex_base.group_biotex_purchase"/>
-    <menuitem id="menu_payment_request" name="Cola de pagos" parent="menu_payments_root" sequence="10" action="action_payment_request"/>
-    <menuitem id="menu_payment_request_paid" name="Pagadas" parent="menu_payments_root" sequence="20" action="action_payment_request_paid"/>
-    <menuitem id="menu_payments_reports" name="Consolidados" parent="menu_payments_root" sequence="30"/>
-    <menuitem id="menu_biotex_payables" name="Cuentas por pagar" parent="menu_payments_reports" sequence="10" action="action_biotex_payables"/>
-    <menuitem id="menu_biotex_receivables" name="Cuentas por cobrar" parent="menu_payments_reports" sequence="20" action="action_biotex_receivables"/>
-
-    <!-- Contabilidad los ve en su app -->
+    <!-- Contabilidad / administración -->
+    <menuitem id="menu_account_payment_queue" name="Solicitudes de pago" parent="account.menu_finance_payables" sequence="90"
+              action="action_payment_request" groups="biotex_base.group_biotex_payments,biotex_base.group_biotex_accounting"/>
+    <menuitem id="menu_account_payment_paid" name="Pagos realizados" parent="account.menu_finance_payables" sequence="91"
+              action="action_payment_request_paid" groups="biotex_base.group_biotex_payments,biotex_base.group_biotex_accounting"/>
     <menuitem id="menu_account_payables_consolidated" name="CxP consolidadas" parent="account.menu_finance_reports" sequence="90"
-              action="action_biotex_payables" groups="biotex_base.group_biotex_accounting"/>
+              action="action_biotex_payables" groups="biotex_base.group_biotex_payments,biotex_base.group_biotex_accounting"/>
     <menuitem id="menu_account_receivables_consolidated" name="CxC consolidadas" parent="account.menu_finance_reports" sequence="91"
               action="action_biotex_receivables" groups="biotex_base.group_biotex_accounting"/>
-    <menuitem id="menu_account_payment_queue" name="Solicitudes de pago" parent="account.menu_finance_payables" sequence="90"
-              action="action_payment_request" groups="biotex_base.group_biotex_accounting"/>
+    <!-- Compras consulta el estado de sus pagos -->
+    <menuitem id="menu_purchase_payment_queue" name="Solicitudes de pago" parent="purchase.menu_procurement_management" sequence="35"
+              action="action_payment_request" groups="biotex_base.group_biotex_purchase"/>
 </odoo>
