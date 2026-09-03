@@ -14,11 +14,11 @@
         <field name="model">account.move</field>
         <field name="inherit_id" ref="account.view_account_invoice_filter"/>
         <field name="arch" type="xml">
-            <xpath expr="//filter[@name='late']" position="after">
+            <xpath expr="//filter[1]" position="before">
                 <filter name="biotex_over_30" string="Vencidas > 30 días"
                         domain="[('invoice_date_due', '&lt;', (context_today() - relativedelta(days=30)).strftime('%Y-%m-%d')), ('payment_state', 'in', ('not_paid', 'partial'))]"/>
             </xpath>
-            <xpath expr="//group" position="inside">
+            <xpath expr="//search" position="inside">
                 <filter name="group_company" string="Razón social" context="{'group_by': 'company_id'}"/>
                 <filter name="group_partner" string="Proveedor / cliente" context="{'group_by': 'partner_id'}"/>
             </xpath>
