@@ -1,8 +1,8 @@
 {
-    'name': 'Biotex - Solicitud de pago y CxP',
+    'name': 'Solicitudes de pago y CxP',
     'summary': 'Solicitud de pago generada desde la OC, cola para administración, comprobante, estado visible para compras; CxP consolidadas por razón social y proveedor',
     'version': '19.0.1.0.0',
-    'category': 'Biotex',
+    'category': 'Distribución de insumos',
     'author': 'Alphaqueb Consulting SAS',
     'license': 'LGPL-3',
     'depends': ['biotex_purchase_request', 'account'],
