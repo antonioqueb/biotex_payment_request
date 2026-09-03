@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_payment_request_purchase,payment request purchase,model_biotex_payment_request,biotex_base.group_biotex_purchase,1,1,1,0
+access_payment_request_payments,payment request payments,model_biotex_payment_request,biotex_base.group_biotex_payments,1,1,1,0
+access_payment_request_accounting,payment request accounting,model_biotex_payment_request,biotex_base.group_biotex_accounting,1,0,0,0
+access_payment_request_direction,payment request direction,model_biotex_payment_request,biotex_base.group_biotex_direction,1,1,1,1

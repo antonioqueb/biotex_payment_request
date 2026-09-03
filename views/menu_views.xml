@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_payment_request" name="Solicitudes de pago" parent="biotex_base.menu_biotex_operations" sequence="40"
+              action="action_payment_request" groups="biotex_base.group_biotex_purchase,biotex_base.group_biotex_payments,biotex_base.group_biotex_accounting"/>
+    <menuitem id="menu_biotex_finance" name="Finanzas" parent="biotex_base.menu_biotex_root" sequence="40"
+              groups="biotex_base.group_biotex_payments,biotex_base.group_biotex_accounting"/>
+    <menuitem id="menu_biotex_payables" name="Cuentas por pagar" parent="menu_biotex_finance" sequence="10" action="action_biotex_payables"/>
+    <menuitem id="menu_biotex_receivables" name="Cuentas por cobrar" parent="menu_biotex_finance" sequence="20" action="action_biotex_receivables"/>
+</odoo>

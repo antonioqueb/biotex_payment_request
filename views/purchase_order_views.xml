@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_purchase_order_form_payment" model="ir.ui.view">
+        <field name="name">purchase.order.form.biotex.payment</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="biotex_purchase.view_purchase_order_form_biotex"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="action_biotex_create_payment_request" type="object" string="Solicitar pago" icon="fa-money"
+                        invisible="state not in ('purchase', 'done') or biotex_payment_state != 'none'"/>
+            </xpath>
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_view_payment_requests" type="object" class="oe_stat_button" icon="fa-money" invisible="not biotex_payment_count">
+                    <field name="biotex_payment_count" widget="statinfo" string="Pagos"/>
+                </button>
+            </xpath>
+            <field name="biotex_transit_state" position="before">
+                <field name="biotex_payment_state" widget="badge" decoration-warning="biotex_payment_state == 'pending'" decoration-success="biotex_payment_state == 'paid'"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_purchase_order_list_payment" model="ir.ui.view">
+        <field name="name">purchase.order.list.biotex.payment</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="biotex_purchase.view_purchase_order_list_biotex"/>
+        <field name="arch" type="xml">
+            <field name="biotex_transit_state" position="before">
+                <field name="biotex_payment_state" optional="show" widget="badge"/>
+            </field>
+        </field>
+    </record>
+</odoo>
