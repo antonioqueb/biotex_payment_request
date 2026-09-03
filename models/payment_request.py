@@ -77,6 +77,7 @@ class BiotexPaymentRequest(models.Model):
                 r.name, r.currency_id.symbol, r.amount, r.partner_id.name, r.purchase_order_id.name, r.warehouse_id.name or '-'),
                 partner_ids=partners.ids, message_type='comment', subtype_xmlid='mail.mt_comment')
             r.purchase_order_id.message_post(body='Solicitud de pago %s enviada a administración.' % r.name)
+        return True
 
     def action_approve(self):
         if not self.env.user.has_group('biotex_base.group_biotex_payments'):
@@ -98,6 +99,7 @@ class BiotexPaymentRequest(models.Model):
             if r.request_id and not r.purchase_order_id.biotex_payment_request_ids.filtered(lambda p: p.state in ('draft', 'requested', 'approved')):
                 r.request_id.is_paid = True
                 r.request_id._biotex_sync_state()
+        return True
 
     def action_cancel(self, reason='Cancelada'):
         for r in self:
