@@ -8,13 +8,17 @@ class PurchaseOrder(models.Model):
     biotex_payment_state = fields.Selection([
         ('none', 'Sin solicitud'), ('pending', 'Pago pendiente'), ('paid', 'Pagada')],
         string='Pago', compute='_compute_biotex_payment_state', store=True)
-    biotex_payment_count = fields.Integer(compute='_compute_biotex_payment_state')
+    biotex_payment_count = fields.Integer(compute='_compute_biotex_payment_count')
+
+    @api.depends('biotex_payment_request_ids')
+    def _compute_biotex_payment_count(self):
+        for po in self:
+            po.biotex_payment_count = len(po.biotex_payment_request_ids)
 
     @api.depends('biotex_payment_request_ids.state', 'biotex_payment_request_ids.amount')
     def _compute_biotex_payment_state(self):
         for po in self:
             reqs = po.biotex_payment_request_ids.filtered(lambda r: r.state != 'cancelled')
-            po.biotex_payment_count = len(po.biotex_payment_request_ids)
             if not reqs:
                 po.biotex_payment_state = 'none'
             elif all(r.state == 'paid' for r in reqs):
