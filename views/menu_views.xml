@@ -6,17 +6,30 @@
         <field name="view_mode">list,form</field>
         <field name="domain">[('state', '=', 'paid')]</field>
     </record>
+    <record id="action_vendor_bills_open" model="ir.actions.act_window">
+        <field name="name">Facturas de proveedor</field>
+        <field name="res_model">account.move</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('move_type', 'in', ('in_invoice', 'in_refund'))]</field>
+        <field name="context">{'default_move_type': 'in_invoice', 'search_default_group_company': 1}</field>
+    </record>
 
-    <!-- Contabilidad / administración -->
+    <menuitem id="menu_payments_root" name="Pagos" sequence="16" web_icon="biotex_payment_request,static/description/icon.svg"
+              groups="biotex_base.group_biotex_payments,biotex_base.group_biotex_accounting,biotex_base.group_biotex_purchase"/>
+    <menuitem id="menu_payment_request" name="Cola de pagos" parent="menu_payments_root" sequence="10" action="action_payment_request"/>
+    <menuitem id="menu_payment_request_paid" name="Pagadas" parent="menu_payments_root" sequence="20" action="action_payment_request_paid"/>
+    <menuitem id="menu_payment_bills" name="Facturas de proveedor" parent="menu_payments_root" sequence="30" action="action_vendor_bills_open"
+              groups="biotex_base.group_biotex_payments,biotex_base.group_biotex_accounting"/>
+    <menuitem id="menu_biotex_payables" name="Cuentas por pagar consolidadas" parent="menu_payments_root" sequence="40" action="action_biotex_payables"
+              groups="biotex_base.group_biotex_payments,biotex_base.group_biotex_accounting"/>
+
+    <!-- Acceso también desde Facturación y Compras -->
     <menuitem id="menu_account_payment_queue" name="Solicitudes de pago" parent="account.menu_finance_payables" sequence="90"
               action="action_payment_request" groups="biotex_base.group_biotex_payments,biotex_base.group_biotex_accounting"/>
-    <menuitem id="menu_account_payment_paid" name="Pagos realizados" parent="account.menu_finance_payables" sequence="91"
-              action="action_payment_request_paid" groups="biotex_base.group_biotex_payments,biotex_base.group_biotex_accounting"/>
     <menuitem id="menu_account_payables_consolidated" name="CxP consolidadas" parent="account.menu_finance_reports" sequence="90"
               action="action_biotex_payables" groups="biotex_base.group_biotex_payments,biotex_base.group_biotex_accounting"/>
     <menuitem id="menu_account_receivables_consolidated" name="CxC consolidadas" parent="account.menu_finance_reports" sequence="91"
               action="action_biotex_receivables" groups="biotex_base.group_biotex_accounting"/>
-    <!-- Compras consulta el estado de sus pagos -->
     <menuitem id="menu_purchase_payment_queue" name="Solicitudes de pago" parent="purchase.menu_procurement_management" sequence="35"
               action="action_payment_request" groups="biotex_base.group_biotex_purchase"/>
 </odoo>
