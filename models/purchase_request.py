@@ -1,12 +1,13 @@
-from odoo import models
+from odoo import api, fields, models
 
 
 class BiotexPurchaseRequest(models.Model):
     _inherit = 'biotex.purchase.request'
 
-    def _biotex_on_cancel(self, reason):
-        """R11: cancelar la solicitud cierra las solicitudes de pago asociadas."""
-        res = super()._biotex_on_cancel(reason)
-        payments = self.purchase_order_ids.biotex_payment_request_ids.filtered(lambda p: p.state in ('draft', 'requested', 'approved'))
-        payments.action_cancel('Solicitud de compra cancelada: %s' % reason)
-        return res
+    is_paid = fields.Boolean(compute='_compute_is_paid', store=True)
+
+    @api.depends('purchase_order_ids.biotex_payment_state', 'purchase_order_ids.state')
+    def _compute_is_paid(self):
+        for rec in self:
+            orders = rec.purchase_order_ids.filtered(lambda p: p.state in ('purchase', 'done'))
+            rec.is_paid = bool(orders) and all(p.biotex_payment_state == 'paid' for p in orders)

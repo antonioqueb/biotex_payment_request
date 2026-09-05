@@ -1,4 +1,6 @@
 from odoo import api, fields, models
+from odoo.exceptions import UserError
+from odoo.addons.biotex_base.models.integrity import lock_records
 
 
 class PurchaseOrder(models.Model):
@@ -6,7 +8,7 @@ class PurchaseOrder(models.Model):
 
     biotex_payment_request_ids = fields.One2many('biotex.payment.request', 'purchase_order_id', string='Solicitudes de pago')
     biotex_payment_state = fields.Selection([
-        ('none', 'Sin solicitud'), ('pending', 'Pago pendiente'), ('paid', 'Pagada')],
+        ('none', 'Sin solicitud'), ('pending', 'Pago pendiente'), ('partial', 'Pago parcial'), ('paid', 'Pagada')],
         string='Pago', compute='_compute_biotex_payment_state', store=True)
     biotex_payment_count = fields.Integer(compute='_compute_biotex_payment_count')
 
@@ -15,14 +17,16 @@ class PurchaseOrder(models.Model):
         for po in self:
             po.biotex_payment_count = len(po.biotex_payment_request_ids)
 
-    @api.depends('biotex_payment_request_ids.state', 'biotex_payment_request_ids.amount')
+    @api.depends('biotex_payment_request_ids.state', 'biotex_payment_request_ids.amount_executed', 'amount_total')
     def _compute_biotex_payment_state(self):
         for po in self:
             reqs = po.biotex_payment_request_ids.filtered(lambda r: r.state != 'cancelled')
             if not reqs:
                 po.biotex_payment_state = 'none'
-            elif all(r.state == 'paid' for r in reqs):
+            elif po.currency_id.compare_amounts(sum(reqs.mapped('amount_executed')), po.amount_total) >= 0:
                 po.biotex_payment_state = 'paid'
+            elif sum(reqs.mapped('amount_executed')) > 0:
+                po.biotex_payment_state = 'partial'
             else:
                 po.biotex_payment_state = 'pending'
 
@@ -45,10 +49,18 @@ class PurchaseOrder(models.Model):
 
     def action_biotex_create_payment_request(self, auto=False):
         created = self.env['biotex.payment.request']
+        lock_records(self)
         for po in self:
+            existing = po.biotex_payment_request_ids.filtered(lambda r: r.state in ('draft', 'requested', 'approved'))
+            if existing:
+                created |= existing
+                continue
+            remaining = po.amount_total - sum(po.biotex_payment_request_ids.mapped('amount_executed'))
+            if po.currency_id.compare_amounts(remaining, 0) <= 0:
+                raise UserError('La compra ya está cubierta por pagos registrados.')
             req = self.env['biotex.payment.request'].create({
                 'purchase_order_id': po.id,
-                'amount': po.amount_total,
+                'amount': remaining,
                 'priority': '1' if po.biotex_request_id.priority == '1' else '0',
                 'date_needed': po.date_planned.date() if po.date_planned else False,
             })

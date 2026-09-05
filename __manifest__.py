@@ -1,7 +1,7 @@
 {
     'name': 'Solicitudes de pago y CxP',
     'summary': 'Solicitud de pago generada desde la OC, cola para administración, comprobante, estado visible para compras; CxP consolidadas por razón social y proveedor',
-    'version': '19.0.1.0.0',
+    'version': '19.0.2.0.0',
     'category': 'Distribución de insumos',
     'author': 'Alphaqueb Consulting SAS',
     'license': 'LGPL-3',

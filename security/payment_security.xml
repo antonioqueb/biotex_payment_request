@@ -5,4 +5,6 @@
         <field name="model_id" ref="model_biotex_payment_request"/>
         <field name="domain_force">[('company_id', 'in', company_ids)]</field>
     </record>
+    <record id="biotex_base.group_biotex_payments" model="res.groups"><field name="implied_ids" eval="[(4, ref('account.group_account_invoice'))]"/></record>
+    <record id="biotex_base.group_biotex_accounting" model="res.groups"><field name="implied_ids" eval="[(4, ref('account.group_account_invoice'))]"/></record>
 </odoo>

@@ -6,6 +6,7 @@
         <field name="arch" type="xml">
             <form>
                 <header>
+                    <button name="action_open_payment" type="object" string="Registrar pago" invisible="state != 'approved'" groups="biotex_base.group_biotex_payments"/>
                     <button name="action_request" type="object" string="Solicitar pago" class="btn-primary" invisible="state != 'draft'"/>
                     <button name="action_approve" type="object" string="Aprobar" class="btn-primary" invisible="state != 'requested'" groups="biotex_base.group_biotex_payments"/>
                     <button name="action_pay" type="object" string="Registrar pago" class="btn-primary" invisible="state not in ('requested', 'approved')" groups="biotex_base.group_biotex_payments"/>
@@ -29,7 +30,7 @@
                         </group>
                         <group string="Pago">
                             <field name="priority" widget="priority"/>
-                            <field name="amount" readonly="state in ('paid', 'cancelled')"/>
+                            <field name="amount_approved" readonly="state != 'requested'"/><field name="amount_executed"/><field name="amount_pending"/><field name="execution_status"/><field name="amount" readonly="state in ('paid', 'cancelled')"/>
                             <field name="amount_order"/>
                             <field name="currency_id" invisible="1"/>
                             <field name="date_needed" readonly="state in ('paid', 'cancelled')"/>
