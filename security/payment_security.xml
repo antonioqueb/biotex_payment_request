@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <record id="biotex_base.group_biotex_direction" model="res.groups">
+        <field name="implied_ids" eval="[(4, ref('account.group_account_manager'))]"/>
+    </record>
     <record id="rule_payment_request_company" model="ir.rule">
         <field name="name">Solicitud de pago: multiempresa</field>
         <field name="model_id" ref="model_biotex_payment_request"/>
